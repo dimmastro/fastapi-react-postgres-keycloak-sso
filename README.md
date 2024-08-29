@@ -3,11 +3,11 @@
 To launch all the services just execute:
 
 ```bash
-docker-compose up -d
+docker compose up -d
 
 or
 
-docker-compose down && docker-compose build && docker-compose up
+docker compose down && docker compose build && docker compose up
 ```
 
 
@@ -22,7 +22,7 @@ Create a `.env` file based on the `.env.example` file.
 Next step is to launch keycloak:
 
 ```bash
-docker-compose up -d keycloak
+docker compose up -d keycloak
 ```
 
 To initialize Keycloak with a client and a user, you can use the script in the keycloak folder. Find out more about the API calls made in the [Keycloak doc](https://www.keycloak.org/docs-api/5.0/rest-api/index.html).
@@ -43,7 +43,7 @@ First, modify your models in the file `database/models.py`.
 Then run the following command to generate the migration:
 
 ```bash
-docker-compose exec backend alembic revision --autogenerate -m "<Your message>"
+docker compose exec backend alembic revision --autogenerate -m "<Your message>"
 ```
 
 > :warning: Check this [page](https://alembic.sqlalchemy.org/en/latest/autogenerate.html#what-does-autogenerate-detect-and-what-does-it-not-detect) to see what alembic detects for the Autogenerate
@@ -51,7 +51,7 @@ docker-compose exec backend alembic revision --autogenerate -m "<Your message>"
 Check the migration file in the `alembic/versions` folder. If you are happy with it, you can run the migration:
 
 ```bash
-docker-compose exec backend alembic upgrade head
+docker compose exec backend alembic upgrade head
 ```
 
 Your database is now up to date !
@@ -61,7 +61,7 @@ Your database is now up to date !
 To facilitate development, you can generate some fake data by running the following command:
 
 ```bash
-docker-compose exec backend python fake_data.py
+docker compose exec backend python fake_data.py
 ```
 
 ## Create frontend app
