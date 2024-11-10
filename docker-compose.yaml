@@ -61,7 +61,7 @@ services:
     command: ["start-dev"]
 
   postgres:
-    image: postgres
+    image: postgres:16
     restart: always
     environment:
       POSTGRES_USER: ${POSTGRES_USER}

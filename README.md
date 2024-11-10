@@ -43,7 +43,9 @@ First, modify your models in the file `database/models.py`.
 Then run the following command to generate the migration:
 
 ```bash
-docker compose exec backend alembic revision --autogenerate -m "<Your message>"
+docker compose exec backend alembic revision --autogenerate -m "<Your message>" - не работает
+docker compose exec backend alembic revision -m "<Your message>"
+
 ```
 
 > :warning: Check this [page](https://alembic.sqlalchemy.org/en/latest/autogenerate.html#what-does-autogenerate-detect-and-what-does-it-not-detect) to see what alembic detects for the Autogenerate
