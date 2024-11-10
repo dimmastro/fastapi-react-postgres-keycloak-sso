@@ -4,10 +4,11 @@ services:
   nginx:
     image: nginx:1.17
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+#      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/templates/default.conf.template:/etc/nginx/templates/default.conf.template:ro   # конфиг сайта default.conf; автогенерация конфига на основе шиблона (с переменными из env)
       - ./logs/nginx:/var/log/nginx
     ports:
-      - 80:80
+      - "$NGINX_PORT_HTTP:80"   # .env
     depends_on:
       - frontend
       - backend
@@ -25,7 +26,7 @@ services:
     volumes:
       - ./logs/backend:/logs
     ports:
-      - 8888:8888
+      - ${FASTAPI_PORT_EXT}:${FASTAPI_PORT_INT}
     depends_on:
       - postgres
       - keycloak
@@ -35,7 +36,7 @@ services:
       context: frontend
       dockerfile: Dockerfile
     ports:
-      - 8000:8000
+      - :8000
     environment:
       NODE_ENV: development
       CHOKIDAR_USEPOLLING: "true"
@@ -51,14 +52,14 @@ services:
       DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
       KEYCLOAK_USER: ${KEYCLOAK_ADMIN_USERNAME}
       KEYCLOAK_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
-      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN_USERNAME}
-      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN_USERNAME}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
       JDBC_PARAMS: "useSSL=false"
     ports:
-      - 8080:8080
+      - ${KEYCLOAK_PORT_EXT_HTTP}:${KEYCLOAK_PORT_INT}
     depends_on:
       - keycloak_postgres
-    command: ["start-dev"]
+    command: ["${KEYCLOAK_START}"]
 
   postgres:
     image: postgres:16
@@ -67,7 +68,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - 5432:5432
+      - :5432
     volumes:
       - postgres_data:/var/lib/postgresql/data
 

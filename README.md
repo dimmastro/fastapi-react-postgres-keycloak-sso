@@ -73,3 +73,13 @@ In frontend folder, run:
 ```bash
 npx create-react-app app --template typescript --use-npm
 ```
+
+## Front works: http://localhost/
+http://localhost:8000/ - does not work!!!!!
+
+
+## May be add to hosts:
+0.0.0.0 keycloak
+0.0.0.0 backend
+0.0.0.0 frontend
+

@@ -1,4 +1,7 @@
 """Main module."""
+import pathlib
+import sys
+
 from fastapi import Depends, FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
@@ -6,16 +9,25 @@ from simber import Logger
 import uvicorn
 import os
 
+from dotenv import load_dotenv
+script_path = pathlib.Path(__file__).resolve()
+PROJECT_PATH = script_path.parent.parent.parent
+ENV_PATH = PROJECT_PATH / '.env'
+if os.path.exists(ENV_PATH):
+    load_dotenv(ENV_PATH)
+
 from app.router import auth, targets
 from app.service.keycloak import verify_token
 from app.service.keycloak import verify_permission
 
-
 from fastapi_keycloak import FastAPIKeycloak, OIDCUser
 
 
+
+FASTAPI_PORT_INT = os.getenv('FASTAPI_PORT_INT')
+
 LOG_FORMAT = "{levelname} [{filename}:{lineno}]:"
-logger = Logger(__name__, log_path="/logs/api.log")
+logger = Logger(__name__, log_path=f"{str(PROJECT_PATH)}/logs/api.log")
 logger.update_format(LOG_FORMAT)
 
 
@@ -97,4 +109,5 @@ def company_admin():
 
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", reload=True, port=8888)  # nosec
+    # uvicorn.run("main:app", host="0.0.0.0", reload=True, port=8888)  # nosec
+    uvicorn.run("main:app", host="0.0.0.0", reload=True, port=int(FASTAPI_PORT_INT))  # nosec

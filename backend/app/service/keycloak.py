@@ -10,14 +10,16 @@ from keycloak.exceptions import KeycloakAuthenticationError, KeycloakGetError
 from keycloak.keycloak_openid import KeycloakOpenID
 
 
-REALM = 'master'
-KEYCLOAK_BASEURL = f'http://localhost:8080/auth/realms' \
-                   f'/{REALM}/protocol/openid-connect'
+KEYCLOAK_SERVER_URL_EXT = os.getenv('KEYCLOAK_SERVER_URL_EXT')
+KEYCLOAK_REALM_NAME = os.getenv('KEYCLOAK_REALM_NAME')
+REALM = KEYCLOAK_REALM_NAME
+KEYCLOAK_BASEURL = f'{KEYCLOAK_SERVER_URL_EXT}/auth/realms' \
+                   f'/{KEYCLOAK_REALM_NAME}/protocol/openid-connect'
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{KEYCLOAK_BASEURL}/token")
 
 keycloak_openid = KeycloakOpenID(
-    server_url=os.environ.get("KEYCLOAK_SERVER_URL"),
+    server_url=os.environ.get("KEYCLOAK_SERVER_URL_INT"),
     realm_name=os.environ.get("KEYCLOAK_REALM_NAME"),
     client_id=os.environ.get("KEYCLOAK_CLIENT_ID"),
     client_secret_key=os.environ.get("KEYCLOAK_CLIENT_SECRET_KEY"),
