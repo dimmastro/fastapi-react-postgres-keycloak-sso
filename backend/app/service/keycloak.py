@@ -13,7 +13,7 @@ from keycloak.keycloak_openid import KeycloakOpenID
 KEYCLOAK_SERVER_URL_EXT = os.getenv('KEYCLOAK_SERVER_URL_EXT')
 KEYCLOAK_REALM_NAME = os.getenv('KEYCLOAK_REALM_NAME')
 REALM = KEYCLOAK_REALM_NAME
-KEYCLOAK_BASEURL = f'{KEYCLOAK_SERVER_URL_EXT}/auth/realms' \
+KEYCLOAK_BASEURL = f'{KEYCLOAK_SERVER_URL_EXT}auth/realms' \
                    f'/{KEYCLOAK_REALM_NAME}/protocol/openid-connect'
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{KEYCLOAK_BASEURL}/token")

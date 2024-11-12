@@ -2,10 +2,13 @@ version: "3"
 
 services:
   nginx:
-    image: nginx:1.17
+    image: nginx
+    env_file:
+      - .env
     volumes:
 #      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
       - ./nginx/templates/default.conf.template:/etc/nginx/templates/default.conf.template:ro   # конфиг сайта default.conf; автогенерация конфига на основе шиблона (с переменными из env)
+      - ./nginx/.htpasswd:/etc/nginx/.htpasswd:ro                          # nginx_basic_auth
       - ./logs/nginx:/var/log/nginx
     ports:
       - "$NGINX_PORT_HTTP:80"   # .env
@@ -36,7 +39,7 @@ services:
       context: frontend
       dockerfile: Dockerfile
     ports:
-      - :8000
+      - ${FRONTEND_PORT_EXT}:8000
     environment:
       NODE_ENV: development
       CHOKIDAR_USEPOLLING: "true"
@@ -59,7 +62,9 @@ services:
       - ${KEYCLOAK_PORT_EXT_HTTP}:${KEYCLOAK_PORT_INT}
     depends_on:
       - keycloak_postgres
-    command: ["${KEYCLOAK_START}"]
+#    command: ["${KEYCLOAK_START}"]
+    command: ${KEYCLOAK_START} --http-port ${KEYCLOAK_PORT_INT}
+#    command: start --http-port $KEYCLOAK_PORT_INT --optimized
 
   postgres:
     image: postgres:16
@@ -73,7 +78,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   keycloak_postgres:
-    image: postgres
+    image: postgres:16
     volumes:
       - keycloak_postgres_data:/var/lib/postgresql/data
     environment:
